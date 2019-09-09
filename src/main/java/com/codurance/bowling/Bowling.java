@@ -3,43 +3,59 @@ package com.codurance.bowling;
 public class Bowling {
 
     private int remainingExtras;
+    private int prevValue;
+    private int score;
 
     public int score(String input) {
-        int score = 0;
-        int prevValue = 0;
+        score = 0;
+        prevValue = 0;
         remainingExtras = 0;
 
         for (char oneChar : input.toCharArray()) {
 
-            int currentValue = 0;
-
-            if (Character.isDigit(oneChar)) {
-                currentValue = Character.getNumericValue(oneChar);
-                prevValue = currentValue;
-
-                score = checkSpareAndStrike(score, currentValue);
-                score += currentValue;
+            if (isDigit(oneChar)) {
+                processDigit(oneChar);
 
             } else if (oneChar == '/') {
+                processSpare();
 
-                currentValue = ballValueForSpare(prevValue);
-                score = checkSpareAndStrike(score, currentValue);
-
-                remainingExtras += 1;
-                score += currentValue;
             } else if (oneChar == 'X') {
-                currentValue = 10;
-                score = checkSpareAndStrike(score, currentValue);
-
-                remainingExtras += 2;
-                score += currentValue;
+                processStrike();
             }
-
-
-
-
         }
+
         return score;
+    }
+
+    private boolean isDigit(char oneChar) {
+        return Character.isDigit(oneChar);
+    }
+
+    private void processStrike() {
+        int currentValue;
+        currentValue = 10;
+        score = checkSpareAndStrike(score, currentValue);
+
+        remainingExtras += 2;
+        score += currentValue;
+    }
+
+    private void processSpare() {
+        int currentValue;
+        currentValue = ballValueForSpare(prevValue);
+        score = checkSpareAndStrike(score, currentValue);
+
+        remainingExtras += 1;
+        score += currentValue;
+    }
+
+    private void processDigit(char oneChar) {
+        int currentValue;
+        currentValue = Character.getNumericValue(oneChar);
+        prevValue = currentValue;
+
+        score = checkSpareAndStrike(score, currentValue);
+        score += currentValue;
     }
 
     private int ballValueForSpare(int prevValue) {
