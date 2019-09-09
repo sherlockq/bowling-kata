@@ -5,12 +5,13 @@ public class Bowling {
     private int remainingExtras;
     private int prevValue;
     private int score;
+    private int round;
 
     public int score(String input) {
         score = 0;
         prevValue = 0;
         remainingExtras = 0;
-
+        round = 0;
         for (char oneChar : input.toCharArray()) {
 
             if (isDigit(oneChar)) {
@@ -21,6 +22,9 @@ public class Bowling {
 
             } else if (oneChar == 'X') {
                 processStrike();
+
+            } else if (oneChar == '|') {
+                round++;
             }
         }
 
@@ -37,6 +41,7 @@ public class Bowling {
         score = checkSpareAndStrike(score, currentValue);
 
         remainingExtras += 2;
+        if(round>9) return;
         score += currentValue;
     }
 
@@ -46,6 +51,7 @@ public class Bowling {
         score = checkSpareAndStrike(score, currentValue);
 
         remainingExtras += 1;
+        if(round>9) return;
         score += currentValue;
     }
 
@@ -55,6 +61,7 @@ public class Bowling {
         prevValue = currentValue;
 
         score = checkSpareAndStrike(score, currentValue);
+        if(round>9) return;
         score += currentValue;
     }
 
