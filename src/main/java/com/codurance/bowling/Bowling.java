@@ -4,10 +4,13 @@ public class Bowling {
     private boolean digit;
 
     public int score(String input) {
-        if(Character.isDigit(input.charAt(0))) {
-            return 1;
+        int score = 0;
+        for(char oneChar : input.toCharArray()){
+            if (Character.isDigit(oneChar)) {
+                score += Character.getNumericValue(oneChar);
+            }
         }
-        return 0;
+        return score;
     }
 
 }
