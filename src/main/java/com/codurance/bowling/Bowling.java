@@ -12,46 +12,64 @@ public class Bowling {
         for (char oneChar : input.toCharArray()) {
 
             int currentValue = 0;
-            System.out.println(oneChar + " - " +  score + " - " + remainingExtras);
 
             if (Character.isDigit(oneChar)) {
                 currentValue = Character.getNumericValue(oneChar);
                 prevValue = currentValue;
 
                 score = checkSpareAndStrike(score, currentValue);
+                score += currentValue;
 
             } else if (oneChar == '/') {
 
-                currentValue = 10 - prevValue;
+                currentValue = ballValueForSpare(prevValue);
                 score = checkSpareAndStrike(score, currentValue);
 
                 remainingExtras += 1;
+                score += currentValue;
             } else if (oneChar == 'X') {
                 currentValue = 10;
                 score = checkSpareAndStrike(score, currentValue);
 
                 remainingExtras += 2;
+                score += currentValue;
             }
 
 
-            score += currentValue;
+
 
         }
         return score;
     }
 
+    private int ballValueForSpare(int prevValue) {
+        return 10 - prevValue;
+    }
+
     private int checkSpareAndStrike(int score, int currentValue) {
 
-        if (remainingExtras > 2) {
-            score += currentValue;
-            remainingExtras--;
+        if (hasDoubleStrike()) {
+            score = consumeOneExtra(score, currentValue);
         }
 
-        if (remainingExtras > 0) {
-            score += currentValue;
-            remainingExtras--;
+        if (hasExtra()) {
+            score = consumeOneExtra(score, currentValue);
         }
 
+        return score;
+    }
+
+    private boolean hasExtra() {
+        return remainingExtras > 0;
+    }
+
+    private boolean hasDoubleStrike() {
+        return remainingExtras > 2;
+    }
+
+    private int consumeOneExtra(int score, int currentValue) {
+        score += currentValue;
+        remainingExtras--;
         return score;
     }
 
