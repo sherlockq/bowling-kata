@@ -6,20 +6,28 @@ public class Bowling {
 
     public int score(String input) {
         int score = 0;
-        int prevValue= 0;
+        int prevValue = 0;
+        boolean isSpare = false;
 
         for (char oneChar : input.toCharArray()) {
-            int valueOfCurrentChar = 0;
+            int currentValue = 0;
             if (Character.isDigit(oneChar)) {
-                valueOfCurrentChar = Character.getNumericValue(oneChar);
-            } else {
-                if (oneChar == '/') {
-                    valueOfCurrentChar = 10 - prevValue;
+                currentValue = Character.getNumericValue(oneChar);
+                prevValue = currentValue;
+
+                if(isSpare) {
+                    isSpare = false;
+                    score += currentValue;
                 }
+
+            } else if (oneChar == '/') {
+                isSpare = true;
+                currentValue = 10 - prevValue;
             }
 
-            score += valueOfCurrentChar;
-            if(valueOfCurrentChar != 0) prevValue = valueOfCurrentChar;
+
+            score += currentValue;
+
         }
         return score;
     }
