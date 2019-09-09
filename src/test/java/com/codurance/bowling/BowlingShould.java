@@ -26,6 +26,7 @@ class BowlingShould {
             "X|11|1-|--|--|--|--|--|--|--||, 15",
             "X|1/|--|--|--|--|--|--|--|--||, 30",
             "X|X|--|--|--|--|--|--|--|--||, 30",
+            //"X|X|1-|--|--|--|--|--|--|--||, 33",
     })
     void score(String input, int expectedScore) {
         Bowling bowling = new Bowling();

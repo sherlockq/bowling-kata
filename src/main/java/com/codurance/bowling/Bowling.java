@@ -2,13 +2,12 @@ package com.codurance.bowling;
 
 public class Bowling {
 
-    private boolean digit;
+    private int counterMultiplier;
 
     public int score(String input) {
         int score = 0;
         int prevValue = 0;
-        boolean isSpare = false;
-        boolean isStrike = false;
+        counterMultiplier = 0;
 
         for (char oneChar : input.toCharArray()) {
             int currentValue = 0;
@@ -16,46 +15,34 @@ public class Bowling {
                 currentValue = Character.getNumericValue(oneChar);
                 prevValue = currentValue;
 
-                if (isSpare || isStrike) {
-                    isSpare = false;
-                    if(isStrike) {
-                        isStrike = false;
-                        isSpare = true;
-                    }
-                    score += currentValue;
-                }
+                score = checkSpareAndStrike(score, currentValue);
 
             } else if (oneChar == '/') {
 
                 currentValue = 10 - prevValue;
-                if (isSpare || isStrike) {
-                    isSpare = false;
-                    if(isStrike) {
-                        isStrike = false;
-                        isSpare = true;
-                    }
-                    score += currentValue;
-                }
+                score = checkSpareAndStrike(score, currentValue);
 
-                isSpare = true;
+                counterMultiplier +=1;
             } else if (oneChar == 'X') {
                 currentValue = 10;
-                if (isSpare || isStrike) {
-                    isSpare = false;
-                    if(isStrike) {
-                        isStrike = false;
-                        isSpare = true;
-                    }
-                    score += currentValue;
-                }
+                score = checkSpareAndStrike(score, currentValue);
 
-                isStrike = true;
+                counterMultiplier +=2;
             }
 
 
             score += currentValue;
 
         }
+        return score;
+    }
+
+    private int checkSpareAndStrike(int score, int currentValue) {
+        if(counterMultiplier > 0) {
+            score += currentValue;
+            counterMultiplier--;
+        }
+
         return score;
     }
 
