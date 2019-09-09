@@ -10,7 +10,10 @@ public class Bowling {
         remainingExtras = 0;
 
         for (char oneChar : input.toCharArray()) {
+
             int currentValue = 0;
+            System.out.println(oneChar + " - " +  score + " - " + remainingExtras);
+
             if (Character.isDigit(oneChar)) {
                 currentValue = Character.getNumericValue(oneChar);
                 prevValue = currentValue;
@@ -22,12 +25,12 @@ public class Bowling {
                 currentValue = 10 - prevValue;
                 score = checkSpareAndStrike(score, currentValue);
 
-                remainingExtras +=1;
+                remainingExtras += 1;
             } else if (oneChar == 'X') {
                 currentValue = 10;
                 score = checkSpareAndStrike(score, currentValue);
 
-                remainingExtras +=2;
+                remainingExtras += 2;
             }
 
 
@@ -39,15 +42,15 @@ public class Bowling {
 
     private int checkSpareAndStrike(int score, int currentValue) {
 
-        if(remainingExtras > 2) {
-            score += currentValue;
-        }
-
-        if(remainingExtras > 0) {
+        if (remainingExtras > 2) {
             score += currentValue;
             remainingExtras--;
         }
 
+        if (remainingExtras > 0) {
+            score += currentValue;
+            remainingExtras--;
+        }
 
         return score;
     }
