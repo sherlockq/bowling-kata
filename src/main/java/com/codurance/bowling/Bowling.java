@@ -2,12 +2,12 @@ package com.codurance.bowling;
 
 public class Bowling {
 
-    private int counterMultiplier;
+    private int remainingExtras;
 
     public int score(String input) {
         int score = 0;
         int prevValue = 0;
-        counterMultiplier = 0;
+        remainingExtras = 0;
 
         for (char oneChar : input.toCharArray()) {
             int currentValue = 0;
@@ -22,12 +22,12 @@ public class Bowling {
                 currentValue = 10 - prevValue;
                 score = checkSpareAndStrike(score, currentValue);
 
-                counterMultiplier +=1;
+                remainingExtras +=1;
             } else if (oneChar == 'X') {
                 currentValue = 10;
                 score = checkSpareAndStrike(score, currentValue);
 
-                counterMultiplier +=2;
+                remainingExtras +=2;
             }
 
 
@@ -38,10 +38,16 @@ public class Bowling {
     }
 
     private int checkSpareAndStrike(int score, int currentValue) {
-        if(counterMultiplier > 0) {
+
+        if(remainingExtras > 2) {
             score += currentValue;
-            counterMultiplier--;
         }
+
+        if(remainingExtras > 0) {
+            score += currentValue;
+            remainingExtras--;
+        }
+
 
         return score;
     }
