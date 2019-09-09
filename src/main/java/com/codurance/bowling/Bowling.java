@@ -8,6 +8,7 @@ public class Bowling {
         int score = 0;
         int prevValue = 0;
         boolean isSpare = false;
+        boolean isStrike = false;
 
         for (char oneChar : input.toCharArray()) {
             int currentValue = 0;
@@ -15,14 +16,40 @@ public class Bowling {
                 currentValue = Character.getNumericValue(oneChar);
                 prevValue = currentValue;
 
-                if(isSpare) {
+                if (isSpare || isStrike) {
                     isSpare = false;
+                    if(isStrike) {
+                        isStrike = false;
+                        isSpare = true;
+                    }
                     score += currentValue;
                 }
 
             } else if (oneChar == '/') {
-                isSpare = true;
+
                 currentValue = 10 - prevValue;
+                if (isSpare || isStrike) {
+                    isSpare = false;
+                    if(isStrike) {
+                        isStrike = false;
+                        isSpare = true;
+                    }
+                    score += currentValue;
+                }
+
+                isSpare = true;
+            } else if (oneChar == 'X') {
+                currentValue = 10;
+                if (isSpare || isStrike) {
+                    isSpare = false;
+                    if(isStrike) {
+                        isStrike = false;
+                        isSpare = true;
+                    }
+                    score += currentValue;
+                }
+
+                isStrike = true;
             }
 
 
