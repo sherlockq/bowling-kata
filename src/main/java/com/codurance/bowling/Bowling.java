@@ -16,13 +16,16 @@ public class Bowling {
         for (char oneChar : input.toCharArray()) {
 
             if (isDigit(oneChar)) {
-                processDigit(oneChar);
-
+                int currentValue = Character.getNumericValue(oneChar);
+                processBall(currentValue, 0);
+                prevValue = currentValue;
             } else if (oneChar == '/') {
-                processSpare();
+                int currentValue = ballValueForSpare(prevValue);
+                processBall(currentValue, 1);
 
             } else if (oneChar == 'X') {
-                processStrike();
+                int currentValue = 10;
+                processBall(currentValue, 2);
 
             } else if (oneChar == '|') {
                 round++;
@@ -40,48 +43,19 @@ public class Bowling {
         return Character.isDigit(oneChar);
     }
 
-    private void processStrike() {
-        int currentValue;
-        currentValue = 10;
+    private void processBall(int currentValue, int roundRemainingExtras) {
        addExtraScore( currentValue);
 
         if (isBonusRound()) {
             return;
         } else {
-            remainingExtras += 2;
+            remainingExtras += roundRemainingExtras;
             score += currentValue;
         }
     }
 
     private boolean isBonusRound() {
         return round > 9;
-    }
-
-    private void processSpare() {
-        int currentValue;
-        currentValue = ballValueForSpare(prevValue);
-        addExtraScore( currentValue);
-
-        if (isBonusRound()) {
-            return;
-        } else {
-            remainingExtras += 1;
-            score += currentValue;
-        }
-    }
-
-    private void processDigit(char oneChar) {
-        int currentValue;
-        currentValue = Character.getNumericValue(oneChar);
-        prevValue = currentValue;
-
-        addExtraScore(currentValue);
-        if (isBonusRound()) {
-            return;
-        } else {
-            remainingExtras += 0;
-            score += currentValue;
-        }
     }
 
     private int ballValueForSpare(int prevValue) {
