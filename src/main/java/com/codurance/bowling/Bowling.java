@@ -2,10 +2,11 @@ package com.codurance.bowling;
 
 public class Bowling {
 
-    private int remainingExtras;
-    private int prevValue;
-    private int score;
-    private int round;
+    private final Strike strike = new Strike(this);
+    int remainingExtras;
+    int prevValue;
+    int score;
+    int round;
 
     public int score(String input) {
         score = 0;
@@ -17,22 +18,21 @@ public class Bowling {
 
             if (isDigit(oneChar)) {
                 int currentValue = Character.getNumericValue(oneChar);
-                processBall(currentValue, 0);
+                strike.processBall(currentValue, 0);
                 prevValue = currentValue;
             } else if (oneChar == '/') {
                 int currentValue = ballValueForSpare(prevValue);
-                processBall(currentValue, 1);
+                strike.processBall(currentValue, 1);
 
             } else if (oneChar == 'X') {
-                int currentValue = 10;
-                processBall(currentValue, 2);
+                strike.scoreBall();
 
             } else if (oneChar == '|') {
                 round++;
 
             } else if (oneChar == '-') {
                 remainingExtras--;
-                if(remainingExtras < 0) remainingExtras = 0;
+                if (remainingExtras < 0) remainingExtras = 0;
             }
         }
 
@@ -43,18 +43,7 @@ public class Bowling {
         return Character.isDigit(oneChar);
     }
 
-    private void processBall(int currentValue, int roundRemainingExtras) {
-       addExtraScore( currentValue);
-
-        if (isBonusRound()) {
-            return;
-        } else {
-            remainingExtras += roundRemainingExtras;
-            score += currentValue;
-        }
-    }
-
-    private boolean isBonusRound() {
+    boolean isBonusRound() {
         return round > 9;
     }
 
@@ -62,30 +51,31 @@ public class Bowling {
         return 10 - prevValue;
     }
 
-    private void addExtraScore(int currentValue) {
-
-        if (hasDoubleStrike()) {
-            score = consumeOneExtra(score, currentValue);
-        }
-
-        if (hasExtra()) {
-            score = consumeOneExtra(score, currentValue);
-        }
-
-    }
-
-    private boolean hasExtra() {
+    boolean hasExtra() {
         return remainingExtras > 0;
     }
 
-    private boolean hasDoubleStrike() {
+    boolean hasDoubleStrike() {
         return remainingExtras > 2;
     }
 
-    private int consumeOneExtra(int score, int currentValue) {
-        score += currentValue;
-        remainingExtras--;
-        return score;
+    void addScore(int scoreToAdd) {
+        score += scoreToAdd;
     }
+
+    void addRemainingExtras(int extraToAdd) {
+        this.remainingExtras += extraToAdd;
+    }
+
+    void reduceRemainingExtras() {
+        this.remainingExtras--;
+    }
+
+
+    /*
+        Game (remainingExtras)
+        Round
+        Ball scoreBall(Game)
+     */
 
 }
