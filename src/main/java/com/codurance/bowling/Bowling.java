@@ -12,6 +12,7 @@ public class Bowling {
         prevValue = 0;
         remainingExtras = 0;
         round = 0;
+
         for (char oneChar : input.toCharArray()) {
 
             if (isDigit(oneChar)) {
@@ -25,8 +26,10 @@ public class Bowling {
 
             } else if (oneChar == '|') {
                 round++;
-            }else if (oneChar == '-'){
-                remainingExtras --;
+
+            } else if (oneChar == '-') {
+                remainingExtras--;
+                if(remainingExtras < 0) remainingExtras = 0;
             }
         }
 
@@ -40,20 +43,31 @@ public class Bowling {
     private void processStrike() {
         int currentValue;
         currentValue = 10;
-        score = checkSpareAndStrike(score, currentValue);
-        if (round <= 9) {
+       addExtraScore( currentValue);
+
+        if (isBonusRound()) {
+            return;
+        } else {
             remainingExtras += 2;
+            score += currentValue;
         }
-        score += currentValue;
+    }
+
+    private boolean isBonusRound() {
+        return round > 9;
     }
 
     private void processSpare() {
         int currentValue;
         currentValue = ballValueForSpare(prevValue);
-        score = checkSpareAndStrike(score, currentValue);
+        addExtraScore( currentValue);
 
-        remainingExtras += 1;
-        score += currentValue;
+        if (isBonusRound()) {
+            return;
+        } else {
+            remainingExtras += 1;
+            score += currentValue;
+        }
     }
 
     private void processDigit(char oneChar) {
@@ -61,21 +75,20 @@ public class Bowling {
         currentValue = Character.getNumericValue(oneChar);
         prevValue = currentValue;
 
-        score = checkSpareAndStrike(score, currentValue);
-        score += currentValue;
+        addExtraScore(currentValue);
+        if (isBonusRound()) {
+            return;
+        } else {
+            remainingExtras += 0;
+            score += currentValue;
+        }
     }
 
     private int ballValueForSpare(int prevValue) {
         return 10 - prevValue;
     }
 
-    private int checkSpareAndStrike(int score, int currentValue) {
-//        if (round > 9) {
-////            if(remainingExtras==2) {
-////                score += currentValue;
-////            }
-//            return score;
-//        }
+    private void addExtraScore(int currentValue) {
 
         if (hasDoubleStrike()) {
             score = consumeOneExtra(score, currentValue);
@@ -85,7 +98,6 @@ public class Bowling {
             score = consumeOneExtra(score, currentValue);
         }
 
-        return score;
     }
 
     private boolean hasExtra() {
@@ -97,9 +109,6 @@ public class Bowling {
     }
 
     private int consumeOneExtra(int score, int currentValue) {
-        if (round > 9) {
-            return score;
-        }
         score += currentValue;
         remainingExtras--;
         return score;
