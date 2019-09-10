@@ -5,36 +5,40 @@ public class Bowling {
     private int remainingExtras = 0;
     private int score = 0;
     private int round = 0;
+    private int prevValue;
 
     public int score(String input) {
-        int prevValue = 0;
-        remainingExtras = 0;
 
         for (char oneChar : input.toCharArray()) {
-
-            if (isDigit(oneChar)) {
-                int ballValue = Character.getNumericValue(oneChar);
-                prevValue = ballValue;
-
-                Ball ball = new Ball(this, ballValue);
-                ball.scoreBall();
-
-            } else if (oneChar == '/') {
-                new Spare(this, 10 - prevValue).scoreBall();
-
-            } else if (oneChar == 'X') {
-                new Strike(this).scoreBall();
-
-            } else if (oneChar == '|') {
+            if (oneChar == '|') {
                 round++;
-
-            } else if (oneChar == '-') {
-                remainingExtras--;
-                if (remainingExtras < 0) remainingExtras = 0;
+                continue;
             }
+            Ball ball = getBall(oneChar);
+            ball.scoreBall();
         }
 
         return score;
+    }
+
+    private Ball getBall(char oneChar) {
+
+        if (isDigit(oneChar)) {
+            int ballValue = Character.getNumericValue(oneChar);
+            prevValue = ballValue;
+
+            return new Ball(this, ballValue);
+
+        } else if (oneChar == '/') {
+            return new Spare(this, 10 - prevValue);
+
+        } else if (oneChar == 'X') {
+            return new Strike(this);
+
+        } else {
+            return new MissedBall(this);
+
+        }
     }
 
     private boolean isDigit(char oneChar) {
@@ -63,6 +67,7 @@ public class Bowling {
 
     void reduceRemainingExtras() {
         this.remainingExtras--;
+        if (remainingExtras < 0) remainingExtras = 0;
     }
 
 

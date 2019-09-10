@@ -26,12 +26,12 @@ public class Ball {
 
         if (bowling.hasDoubleStrike()) {
             bowling.addScore(ballValue);
-            bowling.reduceRemainingExtras();;
+            bowling.reduceRemainingExtras();
         }
 
         if (bowling.hasExtra()) {
             bowling.addScore(ballValue);
-            bowling.reduceRemainingExtras();;
+            bowling.reduceRemainingExtras();
         }
 
     }
