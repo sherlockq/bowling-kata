@@ -2,72 +2,43 @@ package com.codurance.bowling;
 
 public class Bowling {
 
-    private int remainingExtras = 0;
-    private int score = 0;
-    private int round = 0;
-    private int prevValue;
+
+    private static final int TOTAL_FRAME = 10;
+    private char[] ballChars;
 
     public int score(String input) {
-
-        for (char oneChar : input.toCharArray()) {
-            if (oneChar == '|') {
-                round++;
-                continue;
+        ballChars = input.replace("|", "").toCharArray();
+        int ballIndex = 0;
+        int score = 0;
+        for (int frame = 0; frame < TOTAL_FRAME; frame++) {
+            if(ballChars[ballIndex] == 'X') {
+                score += 10 + getBallValue(ballIndex + 1) + getBallValue(ballIndex + 2);
+                ballIndex += 1;
             }
-            Ball ball = getBall(oneChar);
-            ball.scoreBall();
-        }
+            else if(ballChars[ballIndex + 1 ] == '/') {
+                score += 10 + getBallValue(ballIndex + 2);
+                ballIndex += 2;
+            } else {
+                score += getBallValue(ballIndex) + getBallValue(ballIndex + 1);
+                ballIndex += 2;
+            }
 
+        }
         return score;
     }
 
-    private Ball getBall(char oneChar) {
-
-        if (isDigit(oneChar)) {
-            int ballValue = Character.getNumericValue(oneChar);
-            prevValue = ballValue;
-
-            return new Ball(this, ballValue);
-
-        } else if (oneChar == '/') {
-            return new Spare(this, 10 - prevValue);
-
-        } else if (oneChar == 'X') {
-            return new Strike(this);
-
-        } else {
-            return new MissedBall(this);
-
+    int getBallValue(int index) {
+        char ballChar = ballChars[index];
+        if (Character.isDigit(ballChar)) {
+            return Character.getNumericValue(ballChar);
         }
-    }
-
-    private boolean isDigit(char oneChar) {
-        return Character.isDigit(oneChar);
-    }
-
-    boolean isBonusRound() {
-        return round > 9;
-    }
-
-    boolean hasExtra() {
-        return remainingExtras > 0;
-    }
-
-    boolean hasDoubleStrike() {
-        return remainingExtras > 2;
-    }
-
-    void addScore(int scoreToAdd) {
-        score += scoreToAdd;
-    }
-
-    void addRemainingExtras(int extraToAdd) {
-        this.remainingExtras += extraToAdd;
-    }
-
-    void reduceRemainingExtras() {
-        this.remainingExtras--;
-        if (remainingExtras < 0) remainingExtras = 0;
+        switch (ballChar) {
+            case '/':
+                return 10 - getBallValue(index-1);
+            case 'X':
+                return 10;
+        }
+        return 0;
     }
 
 
