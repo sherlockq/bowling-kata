@@ -5,12 +5,12 @@ public class Strike extends Ball {
     private static final int SCORE_FOR_STRIKE = 10;
 
     Strike(Bowling bowling) {
-        super(bowling);
+        super(bowling, SCORE_FOR_STRIKE);
     }
 
     @Override
     void scoreBall() {
-        processBall(SCORE_FOR_STRIKE, EXTRA_FOR_STRIKE);
+        processBall(EXTRA_FOR_STRIKE);
     }
 
 }

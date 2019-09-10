@@ -1,32 +1,36 @@
 package com.codurance.bowling;
 
-public abstract class Ball {
+public class Ball {
+    int ballValue;
     protected final Bowling bowling;
 
-    public Ball(Bowling bowling) {
+    public Ball(Bowling bowling, int ballValue) {
         this.bowling = bowling;
+        this.ballValue = ballValue;
     }
 
-    abstract void scoreBall();
+    void scoreBall() {
+        processBall(0);
+    }
 
-    void processBall(int currentValue, int roundRemainingExtras) {
-        addExtraScore(currentValue);
+    void processBall(int roundRemainingExtras) {
+        addExtraScore();
 
         if (!bowling.isBonusRound()) {
             bowling.addRemainingExtras(roundRemainingExtras);
-            bowling.addScore(currentValue);
+            bowling.addScore(ballValue);
         }
     }
 
-    void addExtraScore(int currentValue) {
+    void addExtraScore() {
 
         if (bowling.hasDoubleStrike()) {
-            bowling.addScore(currentValue);
+            bowling.addScore(ballValue);
             bowling.reduceRemainingExtras();;
         }
 
         if (bowling.hasExtra()) {
-            bowling.addScore(currentValue);
+            bowling.addScore(ballValue);
             bowling.reduceRemainingExtras();;
         }
 

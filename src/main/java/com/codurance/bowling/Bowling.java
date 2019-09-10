@@ -2,30 +2,28 @@ package com.codurance.bowling;
 
 public class Bowling {
 
-    private final Strike strike = new Strike(this);
-    int remainingExtras;
-    int prevValue;
-    int score;
-    int round;
+    private int remainingExtras = 0;
+    private int score = 0;
+    private int round = 0;
 
     public int score(String input) {
-        score = 0;
-        prevValue = 0;
+        int prevValue = 0;
         remainingExtras = 0;
-        round = 0;
 
         for (char oneChar : input.toCharArray()) {
 
             if (isDigit(oneChar)) {
-                int currentValue = Character.getNumericValue(oneChar);
-                strike.processBall(currentValue, 0);
-                prevValue = currentValue;
+                int ballValue = Character.getNumericValue(oneChar);
+                prevValue = ballValue;
+
+                Ball ball = new Ball(this, ballValue);
+                ball.scoreBall();
+
             } else if (oneChar == '/') {
-                int currentValue = ballValueForSpare(prevValue);
-                strike.processBall(currentValue, 1);
+                new Spare(this, 10 - prevValue).scoreBall();
 
             } else if (oneChar == 'X') {
-                strike.scoreBall();
+                new Strike(this).scoreBall();
 
             } else if (oneChar == '|') {
                 round++;
@@ -45,10 +43,6 @@ public class Bowling {
 
     boolean isBonusRound() {
         return round > 9;
-    }
-
-    private int ballValueForSpare(int prevValue) {
-        return 10 - prevValue;
     }
 
     boolean hasExtra() {
@@ -71,11 +65,5 @@ public class Bowling {
         this.remainingExtras--;
     }
 
-
-    /*
-        Game (remainingExtras)
-        Round
-        Ball scoreBall(Game)
-     */
 
 }
