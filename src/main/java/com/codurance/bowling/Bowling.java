@@ -25,6 +25,8 @@ public class Bowling {
 
             } else if (oneChar == '|') {
                 round++;
+            }else if (oneChar == '-'){
+                remainingExtras --;
             }
         }
 
@@ -39,9 +41,9 @@ public class Bowling {
         int currentValue;
         currentValue = 10;
         score = checkSpareAndStrike(score, currentValue);
-
-        remainingExtras += 2;
-        if(round>9) return;
+        if (round <= 9) {
+            remainingExtras += 2;
+        }
         score += currentValue;
     }
 
@@ -51,7 +53,6 @@ public class Bowling {
         score = checkSpareAndStrike(score, currentValue);
 
         remainingExtras += 1;
-        if(round>9) return;
         score += currentValue;
     }
 
@@ -61,7 +62,6 @@ public class Bowling {
         prevValue = currentValue;
 
         score = checkSpareAndStrike(score, currentValue);
-        if(round>9) return;
         score += currentValue;
     }
 
@@ -70,6 +70,12 @@ public class Bowling {
     }
 
     private int checkSpareAndStrike(int score, int currentValue) {
+//        if (round > 9) {
+////            if(remainingExtras==2) {
+////                score += currentValue;
+////            }
+//            return score;
+//        }
 
         if (hasDoubleStrike()) {
             score = consumeOneExtra(score, currentValue);
@@ -91,6 +97,9 @@ public class Bowling {
     }
 
     private int consumeOneExtra(int score, int currentValue) {
+        if (round > 9) {
+            return score;
+        }
         score += currentValue;
         remainingExtras--;
         return score;
